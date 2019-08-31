@@ -75,7 +75,26 @@ export default {
       // 传入一个回调函数 isOK为true 说明所有的校验规则都成功了
       // 如果为false 说明有错误
       this.$refs.loginForm.validate(isOk => {
-
+        if (isOk) {
+          // 请求
+          // axios 中 data中放置body参数 params是放置地址参数的
+          this.$axios({
+            url: '/authorizations',
+            method: 'post',
+            data: this.loginForm
+          }).then(result => {
+            // console.log(result.data.data.token)
+            // 放到前端的缓存中
+            window.localStorage.setItem('user-token', result.data.data.token)
+            // 编程式导航
+            this.$router.push('/') // 登录成功 跳转到home页
+          }).catch(() => {
+            this.$message({
+              message: '手机号或者验证码错误',
+              type: 'warning'
+            })
+          })
+        }
       })
     }
   }
