@@ -2,7 +2,9 @@
   <!-- 最外层容器 -->
   <el-container>
     <!-- 左侧导航 -->
-    <el-aside>左侧</el-aside>
+    <el-aside>
+      <layout-aside></layout-aside>
+    </el-aside>
     <!-- 右侧 -->
     <el-container>
       <!-- 头部 -->
@@ -14,8 +16,11 @@
 </template>
 
 <script>
+import layoutAside from '../../components/home/layout-aside.vue'
 export default {
-
+  components: {
+    'layout-aside': layoutAside
+  }
 }
 </script>
 
