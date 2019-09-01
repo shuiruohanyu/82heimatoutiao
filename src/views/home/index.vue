@@ -2,7 +2,7 @@
   <!-- 最外层容器 -->
   <el-container>
     <!-- 左侧导航 -->
-    <el-aside style='width:200px'>
+    <el-aside style='width:200px;background: #323745;'>
       <layout-aside></layout-aside>
     </el-aside>
     <!-- 右侧 -->
@@ -13,7 +13,7 @@
         <layout-header></layout-header>
       </el-header>
       <!-- 主要区域 -->
-      <el-main>
+      <el-main style='margin:0;padding:0'>
         <router-view></router-view>
       </el-main>
     </el-container>
