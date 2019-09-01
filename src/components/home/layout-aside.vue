@@ -6,6 +6,7 @@
     <el-menu
       background-color="#323745"
       text-color="#adafb5"
+      style='width:201px'
       active-text-color="#ffd04b"
       router
       >
