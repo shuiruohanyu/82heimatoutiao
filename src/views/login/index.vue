@@ -88,11 +88,6 @@ export default {
             window.localStorage.setItem('user-token', result.data.token)
             // 编程式导航
             this.$router.push('/') // 登录成功 跳转到home页
-          }).catch(() => {
-            this.$message({
-              message: '手机号或者验证码错误',
-              type: 'warning'
-            })
           })
         }
       })
