@@ -22,7 +22,13 @@ export default new Router({
       children: [{
         path: '', // 默认的二级路由  的地址 path为空串
         component: Main
-      }]
+      },
+      {
+        // path: '/home/comment',
+        path: 'comment',
+        component: () => import('./views/comment')
+      }
+      ]
     }
     // {
     //   path: '/about',
