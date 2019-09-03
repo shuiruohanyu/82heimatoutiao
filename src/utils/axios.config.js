@@ -15,7 +15,6 @@ axios.interceptors.request.use(function (config) {
 
 // 响应拦截器
 axios.interceptors.response.use(function (response) {
-  debugger
   return response.data ? response.data : {}
 }, function (error) {
   let status = error.response.status
