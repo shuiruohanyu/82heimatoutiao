@@ -22,7 +22,7 @@
       </el-form-item>
       <el-form-item label="时间选择:">
         <el-date-picker
-         @change="changeCondition"
+          @change="changeCondition"
           value-format="yyyy-MM-dd"
           v-model="searchForm.dateRange"
           type="daterange"
@@ -32,7 +32,7 @@
       </el-form-item>
     </el-form>
     <!-- 内容页面结构 -->
-    <div class="total-info">共找到1459条符合条件的内容</div>
+    <div class="total-info">共找到{{page.total}}条符合条件的内容</div>
     <div class="article-list">
       <!-- 循环项 -->
       <div class="article-item" v-for="(item,index) in list" :key="index">
@@ -41,7 +41,7 @@
           <img :src="item.cover.images.length ? item.cover.images[0] : defaultImg" alt />
           <div class="info">
             <span class="title">{{item.title}}</span>
-            <el-tag style="width:80px">{{item.status | statusText}}</el-tag>
+            <el-tag :type="item.status|statusType" style="width:80px">{{item.status | statusText}}</el-tag>
             <span class="date">{{item.pubdate}}</span>
           </div>
         </div>
@@ -56,6 +56,9 @@
         </div>
       </div>
     </div>
+    <el-row type="flex" justify="center" style="margin:10px 0">
+      <el-pagination @current-change="changePage" :current-page="page.page" :page-size="page.pageSize" :total="page.total" background layout="prev, pager, next" ></el-pagination>
+    </el-row>
   </el-card>
 </template>
 
@@ -71,25 +74,52 @@ export default {
         channel_id: null,
         dateRange: [] // 数组 [开始时间,结束时间][1,2]
       },
-      channels: [] // 频道列表数据
+      channels: [], // 频道列表数据
+      page: {
+        page: 1,
+        pageSize: 10,
+        total: 0
+      }
     }
   },
   methods: {
+    //   页码改变
+    changePage (newPage) {
+      this.page.page = newPage // 赋值新页码
+      this.getConditionArticle() // 获取筛选的数据
+    },
+    // 改变搜索条件时
     changeCondition () {
+      this.page.page = 1 // 默认回到第一页
+      this.getConditionArticle() // 获取筛选的数据
+    },
+    // 根据条件查询数据
+    getConditionArticle () {
+      // 组合条件+ 页码  状态/频道/日期区间 每页条数/页码
       let params = {
         status: this.searchForm.status === 5 ? null : this.searchForm.status,
         channel_id: this.searchForm.channel_id,
-        begin_pubdate: this.searchForm.dateRange.length > 0 ? this.searchForm.dateRange[0] : null,
-        end_pubdate: this.searchForm.dateRange.length > 1 ? this.searchForm.dateRange[1] : null
+        begin_pubdate:
+          this.searchForm.dateRange.length > 0
+            ? this.searchForm.dateRange[0]
+            : null,
+        end_pubdate:
+          this.searchForm.dateRange.length > 1
+            ? this.searchForm.dateRange[1]
+            : null,
+        page: this.page.page,
+        per_page: this.page.pageSize
       }
       this.getArticles(params)
     },
+    // 查询文章的列表内容
     getArticles (params) {
       this.$axios({
         url: '/articles',
         params
       }).then(result => {
         this.list = result.data.results
+        this.page.total = result.data.total_count
       })
     },
     // 获取频道数据
@@ -117,6 +147,21 @@ export default {
           return '已发表'
         case 3:
           return '审核失败'
+        default:
+          break
+      }
+    },
+    // 定义类型过滤器
+    statusType: function (value) {
+      switch (value) {
+        case 0:
+          return 'warning'
+        case 1:
+          return 'info'
+        case 2:
+          return 'success'
+        case 3:
+          return 'danger'
         default:
           break
       }
