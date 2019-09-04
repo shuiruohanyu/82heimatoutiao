@@ -35,11 +35,11 @@
         <div class='article-item' v-for="(item,index) in list" :key="index">
             <!-- 左侧内容 -->
             <div class='left'>
-                <img src="../../assets/img/404.png" alt="">
+                <img :src="item.cover.images.length ? item.cover.images[0] : defaultImg" alt="">
                 <div class='info'>
-                    <span class='title'>有内鬼 交易取消</span>
-                    <el-tag style='width:60px'>已发表</el-tag>
-                    <span class='date'>2019-09-03 08:16:26</span>
+                    <span class='title'>{{item.title}}</span>
+                    <el-tag style='width:80px'>{{item.status | statusText}}</el-tag>
+                    <span class='date'>{{item.pubdate}}</span>
                 </div>
             </div>
             <!-- 右侧内容 -->
@@ -56,7 +56,37 @@
 export default {
   data () {
     return {
-      list: [1, 2, 3, 4, 5, 6, 7] // 定义一个空数组
+      list: [], // 定义一个空数组
+      defaultImg: require('../../assets/img/default-cover.jpg') // base64字符串
+    }
+  },
+  methods: {
+    getArticles () {
+      this.$axios({
+        url: '/articles'
+      }).then(result => {
+        this.list = result.data.results
+      })
+    }
+  },
+  created () {
+    this.getArticles()
+  },
+  filters: {
+    //   定义一个过滤器 过滤状态
+    statusText: function (value) {
+      switch (value) {
+        case 0:
+          return '草稿'
+        case 1:
+          return '待审核'
+        case 2:
+          return '已发表'
+        case 3:
+          return '审核失败'
+        default:
+          break
+      }
     }
   }
 }
