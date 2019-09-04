@@ -7,7 +7,8 @@ axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0' // 赋值基�
 
 axios.defaults.transformResponse = [function (data) {
 // data 是响应回来的字符串
-  return jsonBigInt.parse(data)
+
+  return data ? jsonBigInt.parse(data) : {}
 }]
 // 请求拦截器
 axios.interceptors.request.use(function (config) {
