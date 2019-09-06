@@ -79,6 +79,7 @@ export default {
       //   return item
       // })
       // 炫技模式
+    // xxxx  this.formData.cover.images[index] = url // 不是响应式的  不能使用
       this.formData.cover.images = this.formData.cover.images.map((item, i) => i === index ? url : item)
       // 更新了 当前images => props 传给 cover-image
     },
