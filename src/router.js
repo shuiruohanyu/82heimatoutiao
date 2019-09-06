@@ -39,7 +39,12 @@ export default new Router({
       },
       {
         // 发布文章
-        path: 'publish',
+        path: 'publish', // 定义动态路由参数
+        component: () => import('./views/publish')
+      },
+      {
+        // 修改文章
+        path: 'publish/:articleId', // 定义动态路由参数
         component: () => import('./views/publish')
       }
       ]
