@@ -22,7 +22,7 @@
           </el-form-item>
           <el-form-item>
             <!-- 封面图片组件 -->
-            <cover-image :images="formData.cover.images"></cover-image>
+            <cover-image @onClickImg="receiveImg" :images="formData.cover.images"></cover-image>
           </el-form-item>
           <el-form-item prop="channel_id" label="频道">
               <el-select  v-model="formData.channel_id">
@@ -70,6 +70,18 @@ export default {
     }
   },
   methods: {
+    receiveImg (url, index) {
+      // 拿到地址 更新images  需要知道更新哪一条
+      // this.formData.cover.images = this.formData.cover.images.map(function (item, i) {
+      //   if (i === index) {
+      //     return url
+      //   }
+      //   return item
+      // })
+      // 炫技模式
+      this.formData.cover.images = this.formData.cover.images.map((item, i) => i === index ? url : item)
+      // 更新了 当前images => props 传给 cover-image
+    },
     // 切换封面类型  根据当前类型决定 images结构
     changeCoverType () {
       if (this.formData.cover.type === 1) {
