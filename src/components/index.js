@@ -7,6 +7,7 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 
 import { quillEditor } from 'vue-quill-editor'
+import coverImage from './publish/cover-image'
 // 所有自定义组件的插件 abc-d
 export default {
   install: function (Vue) {
@@ -14,5 +15,6 @@ export default {
     Vue.component('layout-header', layoutHeader) // 注册头部组件
     Vue.component('bread-crumb', breadCrumb) // 注册面包屑组件
     Vue.component('quill-editor', quillEditor) // 注册quilleditor编辑器
+    Vue.component('cover-image', coverImage) // 注册封面图片组件
   }
 }
