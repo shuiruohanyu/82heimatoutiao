@@ -63,9 +63,14 @@ export default new Router({
         component: () => import('./views/fans/fansdata')
       },
       {
-        // 账户信息
+        // 异步方案
         path: 'async',
         component: () => import('./views/async')
+      },
+      {
+        // 生命周期
+        path: 'live',
+        component: () => import('./views/live')
       }
       ]
     }
