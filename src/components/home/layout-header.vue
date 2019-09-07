@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import eventBus from '../../utils/events'
 export default {
   data () {
     return {
@@ -57,6 +58,10 @@ export default {
     }
   },
   created () {
+    // 听电话  => 做动作
+    eventBus.$on('updateUserInfo', () => {
+      this.getUserInfo()
+    })
     this.getUserInfo()
   }
 }
