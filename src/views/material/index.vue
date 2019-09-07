@@ -53,42 +53,37 @@ export default {
   },
   methods: {
     // 选择完图片之后执行
-    uploadImg (params) {
+    async uploadImg (params) {
       // formdata类型
       let obj = new FormData()
       obj.append('image', params.file)
-      this.$axios({
+      await this.$axios({
         url: '/user/images', // 同样的地址 不同的类型
         method: 'post',
         data: obj
-      }).then(() => {
-        this.getMaterial() // 重新加载
       })
+      this.getMaterial() // 重新加载
     },
     // 收藏或者取消收藏
-    collectOrCancel (item) {
+    async collectOrCancel (item) {
       let mess = item.is_collected ? '取消' : ''
-      this.$confirm(`您确定要${mess}收藏这张图片?`, '提示').then(() => {
-        // 确定收藏或者取消收藏
-        this.$axios({
-          url: `/user/images/${item.id}`,
-          method: 'put',
-          data: { collect: !item.is_collected } // 取相反
-        }).then(() => {
-          this.getMaterial() // 重新加载
-        })
+      await this.$confirm(`您确定要${mess}收藏这张图片?`, '提示')
+      // 确定收藏或者取消收藏
+      await this.$axios({
+        url: `/user/images/${item.id}`,
+        method: 'put',
+        data: { collect: !item.is_collected } // 取相反
       })
+      this.getMaterial() // 重新加载
     },
-    delImg (item) {
-      this.$confirm('您确定要删除此图片吗?', '提示').then(() => {
-        // 确定要删除
-        this.$axios({
-          url: `/user/images/${item.id}`,
-          method: 'delete'
-        }).then(() => {
-          this.getMaterial() // 重新加载
-        })
+    async delImg (item) {
+      await this.$confirm('您确定要删除此图片吗?', '提示')
+      // 确定要删除
+      await this.$axios({
+        url: `/user/images/${item.id}`,
+        method: 'delete'
       })
+      this.getMaterial() // 重新加载
     },
     changePage (newPage) {
       this.page.page = newPage
@@ -103,18 +98,17 @@ export default {
       this.page.page = 1
       this.getMaterial()
     },
-    getMaterial () {
-      this.$axios({
+    async getMaterial () {
+      let result = await this.$axios({
         url: '/user/images',
         params: {
           page: this.page.page, // 默认第一次是第一页
           per_page: this.page.pageSize, // 默认pageSize 10条
           collect: this.activeName === 'collect' // collect为false就是查全部数据 collect 为true的话 是查询收藏数据
         }
-      }).then(result => {
-        this.list = result.data.results // 接收数据
-        this.page.total = result.data.total_count // 将图片总数赋值给总页码
       })
+      this.list = result.data.results // 接收数据
+      this.page.total = result.data.total_count // 将图片总数赋值给总页码
     }
   },
   created () {

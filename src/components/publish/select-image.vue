@@ -75,9 +75,6 @@ export default {
     }
   },
   created () {
-    this.$on('onSelectImg', function (url) {
-      alert(url)
-    })
     this.getMaterial()
   }
 }

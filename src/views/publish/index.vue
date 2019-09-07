@@ -119,38 +119,34 @@ export default {
         this.formData.cover.images = [] // 自动或者无图 没有内容
       }
     },
-    getChannels () {
-      this.$axios({
+    async getChannels () {
+      let result = await this.$axios({
         url: '/channels'
-      }).then(result => {
-        this.channels = result.data.channels
       })
+      this.channels = result.data.channels
     },
     //  发布文章
     publish (draft) {
-      this.$refs.publishForm.validate((isOK) => {
+      this.$refs.publishForm.validate(async (isOK) => {
         if (isOK) {
           // 只有校验成功了 才去管是新增还是修改
           let { articleId } = this.$route.params // 获取id
-          this.$axios({
+          await this.$axios({
             url: articleId ? `/articles/${articleId}` : '/articles',
             method: articleId ? 'put' : 'post',
             params: { draft }, // draft 为true时 就是草稿
             data: this.formData
-          }).then(() => {
-            //   编程式导航
-            this.$router.push('/home/articles') // 跳转到文章列表页面
           })
+          this.$router.push('/home/articles') // 跳转到文章列表页面
         }
       })
     },
     // 通过id获取文章详情
-    getArticleById (articleId) {
-      this.$axios({
+    async getArticleById (articleId) {
+      let result = await this.$axios({
         url: `/articles/${articleId}`
-      }).then(result => {
-        this.formData = result.data
       })
+      this.formData = result.data
     }
   },
   created () {

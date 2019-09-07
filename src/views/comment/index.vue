@@ -54,35 +54,50 @@ export default {
       this.getComments() // 获取最新页码的数据
     },
     // 打开或者关闭评论
-    openOrClose (row) {
+    async openOrClose (row) {
       let mess = row.comment_status ? '关闭' : '打开'
-      this.$confirm(`您是否要${mess}评论?`, '提示').then(() => {
-        // 写调用接口
-        this.$axios({
-          method: 'put',
-          url: '/comments/status',
-          params: { article_id: row.id.toString() }, // 传递articleId参数
-          data: { allow_comment: !row.comment_status } // 取反 因为当前如果是true  只能改成false , 如果是false 改成true
-        }).then(result => {
-          this.getComments() // 成功之后 重新调用 拉取数据的方法 => 前后台同步
-        })
+      // this.$confirm(`您是否要${mess}评论?`, '提示').then(() => {
+      //   // 写调用接口
+      //   this.$axios({
+      //     method: 'put',
+      //     url: '/comments/status',
+      //     params: { article_id: row.id.toString() }, // 传递articleId参数
+      //     data: { allow_comment: !row.comment_status } // 取反 因为当前如果是true  只能改成false , 如果是false 改成true
+      //   }).then(result => {
+      //     this.getComments() // 成功之后 重新调用 拉取数据的方法 => 前后台同步
+      //   })
+      // })
+      await this.$confirm(`您是否要${mess}评论?`, '提示')
+      await this.$axios({
+        method: 'put',
+        url: '/comments/status',
+        params: { article_id: row.id.toString() }, // 传递articleId参数
+        data: { allow_comment: !row.comment_status } // 取反 因为当前如果是true  只能改成false , 如果是false 改成true
       })
+      this.getComments() // 成功之后 重新调用 拉取数据的方法 => 前后台同步
     },
     formatter (row) {
       return row.comment_status ? '正常' : '关闭'
     },
-    getComments () {
+    async getComments () {
       this.loading = true // 请求数据之前 把进度条打开
       // query参数 就相当于get参数 路径参数 url参数 params
       // body 路径参数  data
-      this.$axios({
+      // this.$axios({
+      //   url: '/articles',
+      //   params: { response_type: 'comment', page: this.page.page, per_page: this.page.pageSize }
+      // }).then(result => {
+      //   this.loading = false // 响应数据之后关系
+      //   this.list = result.data.results
+      //   this.page.total = result.data.total_count
+      // })
+      let result = await this.$axios({
         url: '/articles',
         params: { response_type: 'comment', page: this.page.page, per_page: this.page.pageSize }
-      }).then(result => {
-        this.loading = false // 响应数据之后关系
-        this.list = result.data.results
-        this.page.total = result.data.total_count
       })
+      this.loading = false // 响应数据之后关系
+      this.list = result.data.results
+      this.page.total = result.data.total_count
     }
   },
   created () {
