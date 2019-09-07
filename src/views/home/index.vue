@@ -2,7 +2,7 @@
   <!-- 最外层容器 -->
   <el-container>
     <!-- 左侧导航 -->
-    <el-aside style='width:200px;background-color:#323745;overflow: hidden;'>
+    <el-aside :style="{width: collapse ? '60px' : '200px '}" style='background-color:#323745;overflow: hidden;'>
       <layout-aside></layout-aside>
     </el-aside>
     <!-- 右侧 -->
@@ -21,7 +21,19 @@
 </template>
 
 <script>
+import eventBus from '../../utils/events'
+
 export default {
+  data () {
+    return {
+      collapse: false
+    }
+  },
+  created () {
+    eventBus.$on('openOrClose', (status) => {
+      this.collapse = status
+    })
+  }
 }
 </script>
 
