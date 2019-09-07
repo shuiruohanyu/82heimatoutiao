@@ -39,6 +39,8 @@
 </template>
 
 <script>
+import { getChannels, publish, getArticleById } from '../../api/publish'
+import api from '../../constant/api'
 export default {
   data () {
     let func = function (rule, value, callBack) {
@@ -120,9 +122,7 @@ export default {
       }
     },
     async getChannels () {
-      let result = await this.$axios({
-        url: '/channels'
-      })
+      let result = await getChannels()
       this.channels = result.data.channels
     },
     //  发布文章
@@ -131,8 +131,8 @@ export default {
         if (isOK) {
           // 只有校验成功了 才去管是新增还是修改
           let { articleId } = this.$route.params // 获取id
-          await this.$axios({
-            url: articleId ? `/articles/${articleId}` : '/articles',
+          await publish({
+            url: articleId ? `/${api.API_ARTICLES}/${articleId}` : '/articles',
             method: articleId ? 'put' : 'post',
             params: { draft }, // draft 为true时 就是草稿
             data: this.formData
@@ -143,9 +143,7 @@ export default {
     },
     // 通过id获取文章详情
     async getArticleById (articleId) {
-      let result = await this.$axios({
-        url: `/articles/${articleId}`
-      })
+      let result = await getArticleById(articleId)
       this.formData = result.data
     }
   },
